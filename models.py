@@ -12,8 +12,6 @@ Base = declarative_base()
 Base.query = db_session.query_property()
 
 # Set your classes here.
-
-'''
 class User(Base):
     __tablename__ = 'Users'
 

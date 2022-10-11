@@ -47,19 +47,19 @@ def home():
 def about():
     return render_template('pages/placeholder.about.html')
 
-@app.route('/dashboard')
+@app.route('/PTOdashboard')
 def dashboard():
     return render_template('pages/placeholder.about.html')
 
-@app.route('/perTeacher')
+@app.route('/PTOperTeacher')
 def perTeacher():
     return render_template('pages/placeholder.about.html')
 
-@app.route('/newRecord')
+@app.route('/PTOnewRecord')
 def newRecord():
     return render_template('pages/placeholder.about.html')
 
-@app.route('/updateRecord')
+@app.route('/PTOupdateRecord')
 def updateRecord():
     return render_template('pages/placeholder.about.html')
 
@@ -67,7 +67,6 @@ def updateRecord():
 def login():
     form = LoginForm(request.form)
     return render_template('forms/login.html', form=form)
-
 
 @app.route('/register')
 def register():

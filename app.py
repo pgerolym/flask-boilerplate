@@ -50,6 +50,21 @@ def home():
 def about():
     return render_template('pages/placeholder.about.html')
 
+@app.route('/dashboard')
+def dashboard():
+    return render_template('pages/placeholder.about.html')
+
+@app.route('/perTeacher')
+def perTeacher():
+    return render_template('pages/placeholder.about.html')
+
+@app.route('/newRecord')
+def newRecord():
+    return render_template('pages/placeholder.about.html')
+
+@app.route('/updateRecord')
+def updateRecord():
+    return render_template('pages/placeholder.about.html')
 
 @app.route('/login')
 def login():

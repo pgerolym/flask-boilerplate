@@ -7,24 +7,24 @@ from wtforms.validators import DataRequired, EqualTo, Length
 
 class RegisterForm(Form):
     name = StringField(
-        'Username', validators=[DataRequired(), Length(min=6, max=25)]
+        'Όνομα Χρήστη', validators=[DataRequired(), Length(min=6, max=25)]
     )
     email = StringField(
         'Email', validators=[DataRequired(), Length(min=6, max=40)]
     )
     password = PasswordField(
-        'Password', validators=[DataRequired(), Length(min=6, max=40)]
+        'Κωδικός Χρήστη', validators=[DataRequired(), Length(min=6, max=40)]
     )
     confirm = PasswordField(
-        'Repeat Password',
+        'Επανάληψη Κωδικού Χρήστη',
         [DataRequired(),
-        EqualTo('password', message='Passwords must match')]
+        EqualTo('password', message='Οι κωδικοί πρέπει να ταυτίζονται!')]
     )
 
 
 class LoginForm(Form):
-    name = StringField('Username', [DataRequired()])
-    password = PasswordField('Password', [DataRequired()])
+    email = StringField('Email Χρήστη', [DataRequired()])
+    password = PasswordField('Κωδικός Χρήστη', [DataRequired()])
 
 
 class ForgotForm(Form):

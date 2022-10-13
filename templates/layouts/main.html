@@ -67,10 +67,12 @@
               </ul>
             </li>
           </ul>
-          <ul class="nav navbar-nav pull-right">
-            <!-- <li><a href="{{ url_for('register') }}">Εγγραφή</a></li> -->
-            <li><a href="{{ url_for('login') }}">Σύνδεση</a></li>
-          </ul>
+          {% if username %}
+            <a href="{{ url_for('login') }}" class="btn btn-success pull-right" style="margin-top: 7px;">Σύνδεση</a>
+          {% else %} 
+            <a href="{{ url_for('logout') }}" class="btn btn-primary pull-right" style="margin-top: 7px;">Αποσύνδεση</a>
+            <span class="navbar-text pull-right">Καλως ήρθατε {{ session['user_id']  }},</span>
+          {% endif %}
         </div><!--/.nav-collapse -->
       </div>
     </div>

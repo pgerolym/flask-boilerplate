@@ -5,6 +5,7 @@
 from functools import wraps
 from flask import *
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, login_user, current_user, logout_user
 import logging
 from logging import Formatter, FileHandler
 from forms import *
@@ -15,9 +16,19 @@ from models import *
 # App Config.
 #----------------------------------------------------------------------------#
 
+# u = User.query.get(1)
+# u.set_password('test')
+# db_session.commit()
+
 app = Flask(__name__)
 app.config.from_object('config')
 db = SQLAlchemy(app)
+
+login_manager = LoginManager(app=app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 # Automatically tear down SQLAlchemy.
 @app.teardown_request
@@ -31,7 +42,7 @@ def login_required(test):
         if 'logged_in' in session:
             return test(*args, **kwargs)
         else:
-            flash('You need to login first.')
+            flash('Παρακαλώ πρώτα συνδεθείτε.')
             return redirect(url_for('login'))
     return wrap
 
@@ -48,30 +59,64 @@ def about():
     return render_template('pages/placeholder.about.html')
 
 @app.route('/PTOdashboard')
-def dashboard():
-    return render_template('pages/placeholder.about.html')
+@login_required
+def PTOdashboard():
+    return render_template('pages/placeholder.about.html', username=current_user.name)
 
 @app.route('/PTOperTeacher')
-def perTeacher():
-    return render_template('pages/placeholder.about.html')
+@login_required
+def PTOperTeacher():
+    return render_template('pages/placeholder.about.html', username=current_user.name)
 
 @app.route('/PTOnewRecord')
-def newRecord():
-    return render_template('pages/placeholder.about.html')
+@login_required
+def PTOnewRecord():
+    return render_template('pages/placeholder.about.html', username=current_user.name)
 
 @app.route('/PTOupdateRecord')
-def updateRecord():
-    return render_template('pages/placeholder.about.html')
+@login_required
+def PTOupdateRecord():
+    return render_template('pages/placeholder.about.html', username=current_user.name)
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm(request.form)
+    if form.validate():
+        email = form.email.data
+
+        # remember = True if form.remember else False
+        
+        user = User.query.filter_by(email=email).first()
+        # Login and validate the user.
+        # user should be an instance of your `User` class
+        
+        if not user or not check_password_hash(user.password, form.password.data):
+            flash('Παρακαλώ διορθώστε τα στοιχεία εισόδου και προσπαθήστε ξανά.')
+            return redirect(url_for('login'))  
+
+        login_user(user)
+        print(session.keys)
+        flash('Είσοδος επιτυχής.')
+        
+        # next = request.args.get('next')
+        # is_safe_url should check if the url is safe for redirects.
+        # See http://flask.pocoo.org/snippets/62/ for an example.
+        # if not is_safe_url(next):
+        #     return abort(400)
+
+        return redirect(url_for('home'))
+    
     return render_template('forms/login.html', form=form)
 
 @app.route('/register')
 def register():
     form = RegisterForm(request.form)
     return render_template('forms/register.html', form=form)
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
 
 @app.route('/forgot')
 def forgot():
@@ -104,4 +149,4 @@ if not app.debug:
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(port=port)
+    app.run(host="0.0.0.0", port=port)
